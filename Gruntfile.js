@@ -18,31 +18,34 @@ module.exports = function (grunt) {
             }
         },
 
-        // Before generating any new files, remove any previously-created files.
-        clean: {
-            tests: ['tmp']
-        },
-
-        // Configuration to be run (and then tested).
-        tiny_livereload: {
-            default_options: {
+        connect: {
+            server: {
                 options: {
-                },
-                files: {
-                    'tmp/default_options': ['test/fixtures/testing', 'test/fixtures/123']
-                }
-            },
-            custom_options: {
-                options: {
-                    separator: ': ',
-                    punctuation: ' !!!'
-                },
-                files: {
-                    'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123']
+                    port: 1234,
+                    hostname: '127.0.0.1',
+                    base: 'static',
+                    open: true
                 }
             }
         },
 
+        sass: {
+            dist: {
+                files: {
+                    'static/example.css': 'static/src/example.scss'
+                }
+            }
+        },
+
+        watch: {
+            sass: {
+                files: 'static/**/*.scss',
+                tasks: ['sass', 'tinylr-reload'],
+                options: {
+                    nospawn: true
+                }
+            }
+        },
 
         mochacli: {
             src: ['test/**/*.js'],
@@ -52,6 +55,12 @@ module.exports = function (grunt) {
                 ui: 'bdd',
                 reporter: 'spec'
             }
+        },
+
+        'tinylr-start': {
+            reload: {
+                options: {}
+            }
         }
 
     });
@@ -59,11 +68,6 @@ module.exports = function (grunt) {
     // Actually load this plugin's task(s).
     grunt.loadTasks('tasks');
 
-    // Whenever the "test" task is run, first clean the "tmp" dir, then run this
-    // plugin's task(s), then test the result.
-    grunt.registerTask('test', ['clean', 'tiny_livereload', 'mochacli']);
-
-    // By default, lint and run all tests.
-    grunt.registerTask('default', ['jshint', 'test']);
+    grunt.registerTask('default', ['connect', 'tinylr-start', 'watch']);
 
 };

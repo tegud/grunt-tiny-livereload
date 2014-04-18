@@ -1,7 +1,8 @@
 var expect = require('expect.js');
 
-describe('FormViewModel', function () {
-    it('sets the page title', function (done) {
+describe('start tiny live reload server', function () {
+    it('starts the server', function (done) {
         expect(true).to.eql(false);
+        done();
     });
 });
